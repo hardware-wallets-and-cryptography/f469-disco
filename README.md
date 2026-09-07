@@ -24,7 +24,7 @@ To get MicroPython running on the board:
 
 Clone this repo recursively - we have many submodules. If you forgot - Makefile will do it for you, but be patient, submodules are pretty large.
 
-### Prerequisities: Board
+### Prerequisites: Board
 
 To compile the firmware for the board you will need `arm-none-eabi-gcc` compiler.
 
