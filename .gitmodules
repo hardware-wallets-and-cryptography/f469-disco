@@ -1,14 +1,12 @@
 [submodule "micropython"]
 	path = micropython
-	url = https://github.com/hardware-wallets-and-cryptography/micropython.git
+	url = ../../diybitcoinhardware/micropython
 [submodule "usermods/udisplay_f469/lvgl"]
 	path = usermods/udisplay_f469/lvgl
-	url = https://github.com/lvgl/lvgl.git
-	branch = release/v6
+	url = ../../littlevgl/lvgl
 [submodule "usermods/secp256k1"]
 	path = usermods/secp256k1
-	url = https://github.com/hardware-wallets-and-cryptography/secp256k1-embedded.git
-	branch = secp-zkp
+	url = ../../diybitcoinhardware/secp256k1-embedded
 [submodule "libs/common/embit"]
 	path = libs/common/embit
-	url = https://github.com/hardware-wallets-and-cryptography/embit.git
+	url = https://github.com/diybitcoinhardware/embit.git
