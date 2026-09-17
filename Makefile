@@ -68,14 +68,21 @@ test: unix frozen-import-smoke
 
 all: mpy-cross empty disco unix
 
+# skips ports that are not checked out yet, so it works on a fresh clone
 clean:
 	rm -rf $(TARGET_DIR)
-	make -C $(MPY_DIR)/mpy-cross clean
-	make -C $(MPY_DIR)/ports/unix \
-		USER_C_MODULES=$(USER_C_MODULES) \
-		FROZEN_MANIFEST=$(FROZEN_MANIFEST_UNIX) clean
-	make -C $(MPY_DIR)/ports/stm32 \
-		BOARD=$(BOARD) \
-		USER_C_MODULES=$(USER_C_MODULES) clean
+	if [ -d $(MPY_DIR)/mpy-cross ]; then \
+		make -C $(MPY_DIR)/mpy-cross clean; \
+	fi
+	if [ -d $(MPY_DIR)/ports/unix ]; then \
+		make -C $(MPY_DIR)/ports/unix \
+			USER_C_MODULES=$(USER_C_MODULES) \
+			FROZEN_MANIFEST=$(FROZEN_MANIFEST_UNIX) clean; \
+	fi
+	if [ -d $(MPY_DIR)/ports/stm32 ]; then \
+		make -C $(MPY_DIR)/ports/stm32 \
+			BOARD=$(BOARD) \
+			USER_C_MODULES=$(USER_C_MODULES) clean; \
+	fi
 
 .PHONY: all clean frozen-import-smoke
