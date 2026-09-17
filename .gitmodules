@@ -15,3 +15,4 @@
 [submodule "libs/common/embit"]
 	path = libs/common/embit
 	url = https://github.com/hardware-wallets-and-cryptography/embit.git
+	branch = dev
