@@ -74,7 +74,7 @@ If something is not working you can clean up with `make clean`.
 
 ## Run Unit Tests
 
-Currently unittests work only on linuxport, and there are... not many... Contributions are very welcome!
+Currently unit tests run against the MicroPython Unix port, and there are... not many... Contributions are very welcome!
 
 ```
 make test

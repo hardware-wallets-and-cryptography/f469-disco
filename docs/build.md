@@ -34,6 +34,8 @@ brew tap ArmMbed/homebrew-formulae
 brew install arm-none-eabi-gcc python3 sdl2
 ```
 
+**Windows**: Install Windows Subsystem for Linux (WSL) and follow Linux instructions.
+
 ## Submodules
 
 Initialize submodules (done automatically by make):
