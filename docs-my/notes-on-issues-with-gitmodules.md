@@ -173,13 +173,14 @@ jump to v9.
 [submodule "libs/common/embit"]
 	path = libs/common/embit
 	url = https://github.com/hardware-wallets-and-cryptography/embit.git
+	branch = dev
 ```
 
 ### All 6 submodules, checked sound
 
 | Submodule | Pin | Remote | Reachable from |
 |---|---|---|---|
-| `libs/common/embit` | `eb6104f` | hwac/embit | `master` |
+| `libs/common/embit` | `eb6104f` | hwac/embit | `master`, `dev` |
 | `libs/common/embit/…/secp256k1-zkp` | `d9560e0` | ElementsProject/secp256k1-zkp | `master` |
 | `micropython` | `6bdf1b6` | hwac/micropython | `master` |
 | `usermods/secp256k1` | `1e74fc3` | hwac/secp256k1-embedded | `secp-zkp` |
@@ -219,9 +220,13 @@ far it can go — they do not lock anything:
 
 - lvgl would still move to the tip of `release/v6` (`1f707f9`), which is
   490 commits past the pin.
-- `micropython` and `libs/common/embit` happen to sit on their remotes'
-  default branch tips right now, so they would not move today. That is
-  luck, not protection.
+- `micropython` has no `branch` key, so it follows the remote's default
+  branch. It happens to sit on that tip right now, so it would not move
+  today. That is luck, not protection.
+- `libs/common/embit` got `branch = dev` added in `ee5795f`. The pin
+  (`eb6104f`) is 2 commits behind the tip of `dev` (`acf9cf2`) but is
+  still an ancestor of it, so `--remote` would advance it, not jump it
+  sideways. This one is now intentional tracking, not luck.
 
 ### 3. Never re-pin `usermods/secp256k1` to that fork's `master`
 
