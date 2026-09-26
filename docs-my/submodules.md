@@ -19,17 +19,25 @@
 > so there is no version skew between the two checkouts. **Only the `usermods`
 > copy reaches firmware; keep the two in step when bumping.**
 
-### What reaches firmware
+### What reaches the device
 
-- `micropython` — is the build
-- `usermods/secp256k1` + its `secp256k1/` tree — compiled into the signing
-  usermod (`usermods/secp256k1/micropython.mk`)
-- `lvgl` — compiled into the display usermod
-  (`usermods/udisplay_f469/micropython.mk` includes `lvgl/lvgl.mk`)
-- `embit` — frozen as Python. `manifests/embit.py` walks
-  `libs/common/embit/src` and skips `embit/util` (CPython-only backends —
-  firmware uses the C usermod); `manifests/common.py` walks `libs/common` and
-  skips `embit`, so the two do not double-freeze
+Firmware (`make disco`; paths relative to repo root):
+
+- `micropython` — the build (`make -C micropython/ports/stm32`)
+- `usermods/secp256k1` + its `secp256k1/` tree — compiled into the
+  signing usermod (`USER_C_MODULES=usermods`)
+- `usermods/udisplay_f469/lvgl` — compiled into the display usermod
+  (its `micropython.mk` includes `lvgl/lvgl.mk`)
+- `libs/common/embit` — frozen as Python. Chain:
+  `manifests/disco.py` → `empty.py` + `common.py` → `embit.py`. `embit.py`
+  walks `embit/src` and skips `embit/util` (CPython-only backends — firmware
+  uses the C usermod); `common.py` skips `embit`, so no double-freeze.
+  `empty.py` freezes `usermods/udisplay_f469/display_f469`.
+
+`make empty` builds the same C usermods but freezes only `empty.py` — no
+`embit`, no `libs/common`.
+
+Not built: `libs/common/embit/secp256k1/secp256k1-zkp`.
 
 The `embit/secp256k1/` checkout is a C source tree for `embit`'s own CPython
 ctypes build, not a Python package. It sits next to code that does
