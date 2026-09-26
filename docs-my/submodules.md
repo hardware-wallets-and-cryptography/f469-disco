@@ -2,26 +2,30 @@
 
 ## Map
 
-| Submodule | Remote | Fork? | Pinned commit | Describe | Branch (`branch =`) |
-|-----------|--------|:-----:|---------------|----------|---------------------|
-| `usermods/udisplay_f469/lvgl` | `lvgl/lvgl` | ❌ | `dd100e5` | `v6.0.2-31-gdd100e5e0` | — |
-| `micropython` | `hardware-wallets-and-cryptography/micropython` | ✅ | `6bdf1b6` | `v1.10-1185-g6bdf1b691` | — |
-| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
-| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
-| `usermods/secp256k1/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-zkp` | ✅ | `d9560e0` | `d9560e0a` | — |
-| `libs/common/embit/secp256k1/secp256k1-zkp` | `hardware-wallets-and-cryptography/secp256k1-zkp` | ✅ | `d9560e0` | `d9560e0a` | — |
-| `libs/common/embit` | `hardware-wallets-and-cryptography/embit` | ✅ | `d418ef3` | `v0.8.2-4-gd418ef3` | `int` |
+Single source of truth for pins.  
+Forks live under `hardware-wallets-and-cryptography/`.  
+Drift snapshot as of `2026-09-26`.  
 
-> **5 forked / 1 external**
+| Submodule | Remote | Fork | Pin | Describe | `--remote` target | Drift past pin | Pin reachable from | Firmware |
+|---|---|:-:|---|---|---|---|---|:-:|
+| `micropython` | `micropython` | ✅ | `6bdf1b6` | `v1.10-1185-g6bdf1b691` | `master` (default) | 0 | fork `master` | ✅ |
+| `usermods/secp256k1` | `secp256k1-embedded` | ✅ | `0502cf4` | — | `secp-zkp--int` (`branch =`) | 0 | `secp-zkp--int` only | ✅ |
+| `usermods/secp256k1/secp256k1` | `secp256k1-zkp` | ✅ | `d9560e0` | — | `master` (default) | **1949** (→ `037cc6d`) | `master`, `dev`, `int` | ✅ |
+| `usermods/udisplay_f469/lvgl` | `lvgl/lvgl` | ❌ | `dd100e5` | `v6.0.2-31-gdd100e5e0` | `master` (default) | **10204** (→ v9.x) | `master`, 33 `release/*`, 56 tags | ✅ |
+| `libs/common/embit` | `embit` | ✅ | `d418ef3` | `v0.8.2-4-gd418ef3` | `int` (`branch =`) | 0 | `int` only | ✅ |
+| `libs/common/embit/secp256k1/secp256k1-zkp` | `secp256k1-zkp` | ✅ | `d9560e0` | — | `master` (default) | **1949** (→ `037cc6d`) | `master`, `dev`, `int` | ❌ |
+
+> **5 forked**  
+> **1 external**
 
 > Remote `secp256k1-zkp` appears twice — under `usermods/secp256k1` and under
-> `embit/secp256k1` — both from the same fork and at the same commit `d9560e0`,
-> so there is no version skew between the two checkouts. **Only the `usermods`
-> copy reaches firmware; keep the two in step when bumping.**
+> `libs/common/embit/secp256k1` — both from the same fork and at the same commit `d9560e0`,
+> so there is no version skew between the two checkouts. **Keep the two in step
+> when bumping.**
 
 ### What reaches the device
 
-Firmware (`make disco`; paths relative to repo root):
+**Firmware** (`make disco`; paths relative to repo root):
 
 - `micropython` — the build (`make -C micropython/ports/stm32`)
 - `usermods/secp256k1` + its `secp256k1/` tree — compiled into the
@@ -37,45 +41,33 @@ Firmware (`make disco`; paths relative to repo root):
 `make empty` builds the same C usermods but freezes only `empty.py` — no
 `embit`, no `libs/common`.
 
-Not built: `libs/common/embit/secp256k1/secp256k1-zkp`.
-
-The `embit/secp256k1/` checkout is a C source tree for `embit`'s own CPython
-ctypes build, not a Python package. It sits next to code that does
-`import secp256k1`, which under CPython would make it an implicit namespace
-package; `libs/common/embit/src/embit/util/secp256k1.py` guards against that
-explicitly (it keys on `from micropython import const`). It is outside every
-freeze root, so it never reaches firmware.
+**Not built**: `libs/common/embit/secp256k1/secp256k1-zkp`. It is a C source tree
+for `embit`'s own CPython ctypes build, outside every freeze root. It sits next
+to code that does `import secp256k1`, which under CPython would make it an
+implicit namespace package; `libs/common/embit/src/embit/util/secp256k1.py`
+guards against that explicitly (it keys on `from micropython import const`).
 
 ## Verify pin and drift for each submodule
 
-For each, fetch the row's `--remote` target (its `branch =`, or the fork's
-default branch when none is set), then compare `HEAD` to the pin and count
-commits of drift:
-
-| Submodule | Target | Pin | Command |
-|-----------|--------|-----|---------|
-| `usermods/udisplay_f469/lvgl` | `master` (default) | `dd100e5` | `git -C usermods/udisplay_f469/lvgl fetch origin master -q; git -C usermods/udisplay_f469/lvgl rev-parse --short HEAD; git -C usermods/udisplay_f469/lvgl rev-list --count dd100e5..origin/master` |
-| `micropython` | `master` (default) | `6bdf1b6` | `git -C micropython fetch origin master -q; git -C micropython rev-parse --short HEAD; git -C micropython rev-list --count 6bdf1b6..origin/master` |
-| `usermods/secp256k1` | `secp-zkp--int` | `0502cf4` | `git -C usermods/secp256k1 fetch origin secp-zkp--int -q; git -C usermods/secp256k1 rev-parse --short HEAD; git -C usermods/secp256k1 rev-list --count 0502cf4..origin/secp-zkp--int` |
-| `usermods/secp256k1/secp256k1` | `master` (default) | `d9560e0` | `git -C usermods/secp256k1/secp256k1 fetch origin master -q; git -C usermods/secp256k1/secp256k1 rev-parse --short HEAD; git -C usermods/secp256k1/secp256k1 rev-list --count d9560e0..origin/master` |
-| `libs/common/embit/secp256k1/secp256k1-zkp` | `master` (default) | `d9560e0` | `git -C libs/common/embit/secp256k1/secp256k1-zkp fetch origin master -q; git -C libs/common/embit/secp256k1/secp256k1-zkp rev-parse --short HEAD; git -C libs/common/embit/secp256k1/secp256k1-zkp rev-list --count d9560e0..origin/master` |
-| `libs/common/embit` | `int` | `d418ef3` | `git -C libs/common/embit fetch origin int -q; git -C libs/common/embit rev-parse --short HEAD; git -C libs/common/embit rev-list --count d418ef3..origin/int` |
-
-Each command has three parts, reading its output line by line:
+Reads each pin and `--remote` target from git, so it needs no edit after a pin
+bump. Use it to refresh the Map's drift column:
 
 ```sh
-git -C <path> fetch origin <branch> -q
-# no output — just refreshes the local view of the remote
-
-git -C <path> rev-parse --short HEAD
-# should print the pin itself; any other value means HEAD has moved,
-# including an unstaged pin change
-
-git -C <path> rev-list --count <pin>..origin/<branch>
-# drift: commits past the pin on that target;
-# 0 means the pin currently sits at the head of its --remote target,
-# not that it's protected from future pushes
+git submodule foreach --recursive -q '
+  b=$(git config -f "$toplevel/.gitmodules" "submodule.$name.branch") || \
+    { git remote set-head origin -a >/dev/null; b=HEAD; }
+  git fetch -q origin
+  printf "%-45s pin=%.7s head=%s drift=%s dirty=%s\n" "$displaypath" "$sha1" \
+    "$(git rev-parse --short=7 HEAD)" \
+    "$(git rev-list --count "$sha1..origin/$b")" \
+    "$(git status --short | wc -l | tr -d " ")"
+'
 ```
+
+- `head` must equal `pin`; otherwise the checkout has moved.
+- `dirty` must be `0`.
+- `drift` is commits past the pin on the `--remote` target. `0` means the pin
+  sits at the target's head today, not that it is protected from future pushes.
 
 ## Reproducibility
 
@@ -87,14 +79,17 @@ git clone --recursive https://github.com/hardware-wallets-and-cryptography/f469-
 ```
 
 resolves the exact same trees, regardless of who owns each remote. The `Makefile`
-reinforces this — the `mpy-cross/Makefile` and `embit/src/embit/__init__.py`
-guard rules run
+guard rules for `micropython/mpy-cross/Makefile` and
+`libs/common/embit/src/embit/__init__.py` run
 
 ```make
 git submodule update --init --recursive
 ```
 
-with **no `--remote`**, so a build always honours the recorded hashes.
+with **no `--remote`**, so a fresh checkout is initialised at the recorded
+hashes. These are file targets: they run only when those files are missing.
+`make` does not reset a submodule that is initialised but has moved — it builds
+whatever is checked out. Run the verify script before building.
 
 **What `--remote` does.** Nothing during a normal clone or build. Only
 `git submodule update --remote` reads branches: it moves a submodule to the head
@@ -102,24 +97,15 @@ of its `branch =`, or of the remote's default branch (`origin/HEAD`) when no
 `branch =` is set, and stages a new gitlink. Omitting `branch =` therefore does
 not opt a submodule out — it just targets the default branch. With
 `--recursive`, nested submodules move too. That is the drift footgun: it
-silently replaces a verified tree with an untested one. As of 2026-09-25:
+silently replaces a verified tree with an untested one (see the Map's drift
+column).
 
-| Submodule | `--remote` target | Target head | Commits past pin |
-|---|---|---|---|
-| `micropython` | `master` (default) | `6bdf1b6` | 0 |
-| `embit` | `int` | `d418ef3` | 0 |
-| `secp256k1-embedded` | `secp-zkp--int` | `0502cf4` | 0 |
-| `lvgl` | `master` (default) | `d3c5b41` | **10203** |
-| `embit/secp256k1/secp256k1-zkp` | `master` (default, fork) | `037cc6d` | **1949** |
-| `usermods/secp256k1/secp256k1` | `master` (default, fork) | `037cc6d` | **1949** |
-
-So a single `--remote --recursive` would swap the display stack (lvgl `v9.x`
+A single `--remote --recursive` would swap the display stack (lvgl `v9.x`
 over the pinned `v6.0.2`) and both `secp256k1-zkp` trees — including the one
 compiled into the signing usermod. Even lvgl's `release/v6` is 490 commits past
-`dd100e5` (`1f707f9`, 2025-08-14, vs 2019-10-29). The zero rows sit on their
-pins by timing, not by guarantee.
+`dd100e5` (`1f707f9`, 2025-08-14, vs 2019-10-29; as of 2026-09-26).
 
-Avoid `--remote`. To move a pin, do it explicitly:
+Avoid `--remote`. To move a top-level pin, do it explicitly:
 
 ```sh
 git submodule sync --recursive
@@ -129,6 +115,28 @@ git -C <path> submodule sync --recursive
 git -C <path> submodule update --init --recursive
 git add <path>
 ```
+
+A nested pin (either `secp256k1-zkp` checkout) is recorded in the parent
+submodule's repo, not here. Bumping it takes two commits in two repos. Check
+first that the parent's drift is `0`; otherwise checking out its branch also
+pulls in the untested commits past its pin.
+
+```sh
+# 1. in the parent fork: move the nested pin, commit, push to its branch
+git -C <parent> checkout <parent-branch>          # e.g. usermods/secp256k1 → secp-zkp--int
+git -C <parent>/<nested> fetch origin
+git -C <parent>/<nested> checkout <full-sha>
+git -C <parent> add <nested>
+git -C <parent> commit -m "bump <nested> to <sha>"
+git -C <parent> push origin <parent-branch>
+
+# 2. here: move the parent pin to that new commit
+git add <parent>
+```
+
+Both `secp256k1-zkp` checkouts are pinned to the same commit. To keep them in
+step, run step 1 in both `usermods/secp256k1` (branch `secp-zkp--int`) and
+`libs/common/embit` (branch `int`), then stage both parents here in one commit.
 
 **Verifying a checkout matches the pins**
 
@@ -140,53 +148,34 @@ Every line must start with a **space**. A leading `+` means the checkout differs
 from the recorded gitlink, `-` means uninitialized, `U` means conflicts. This
 compares against the **index**, so a staged-but-uncommitted pin also shows a
 space; use `git diff --cached --submodule=short` to see pins that differ from
-`HEAD`. Also check for drift inside submodules:
-
-```sh
-git -C micropython                 status --short   # expect empty
-git -C libs/common/embit           status --short   # expect empty
-git -C usermods/secp256k1          status --short   # expect empty
-git -C usermods/udisplay_f469/lvgl status --short   # expect empty
-```
+`HEAD`. For changes inside submodules, nested ones included, check the
+verify script's `dirty` field.
 
 Untracked content inside a submodule is not harmless here: `manifests/common.py`
 and `manifests/embit.py` walk whole directory trees and freeze every `.py` they
 find, so stray files can end up compiled into firmware or break the build.
 
-**Local remote URLs.** All four top-level `.url` entries in `.git/config` match
-`.gitmodules`, and both nested `secp256k1-zkp` entries (under `embit` and under
-`usermods/secp256k1`) match their repos' `.gitmodules` (the fork). Re-check after
-any `.gitmodules` edit, here or in a submodule — an already-initialised checkout
-keeps the old URL until synced:
+**Local remote URLs.** The URLs in `.git/config` (here and in each submodule)
+should match the matching `.gitmodules`. Re-check after any `.gitmodules` edit,
+here or in a submodule — an already-initialised checkout keeps the old URL until
+synced:
 
 ```sh
 git config --get-regexp '^submodule\..*\.url'
-git -C libs/common/embit  config --get-regexp '^submodule\..*\.url'
-git -C usermods/secp256k1 config --get-regexp '^submodule\..*\.url'
+git submodule foreach --recursive 'git config --get-regexp "^submodule\..*\.url" || :'
 git submodule sync --recursive
 ```
 
 This never affects a pin, only where a re-fetch goes.
 
 **What can still break reproducibility.** The pins are only as durable as the
-remotes and branches hosting them. For the one external remote, `lvgl/lvgl`,
-repository deletion (or tag removal plus force-push of every containing branch)
-upstream would make a fresh `--recursive`
-clone fail, and the pinned objects would then survive only in existing local
-clones. It is C source that reaches firmware.
+remotes and branches hosting them. An orphaned pin makes a fresh `--recursive`
+clone fail; its objects then survive only in existing local clones. None of the
+pins is orphaned today (see the Map's "Pin reachable from" column).
 
-Forks are not immune: a pin reachable from only one branch is orphaned if that
-branch is force-pushed past it.
-
-| Pin | Reachable from |
-|---|---|
-| `d418ef3` (embit) | `int` only |
-| `0502cf4` (secp256k1-embedded) | `secp-zkp--int` only |
-| `6bdf1b6` (micropython) | fork `master` |
-| `d9560e0` (secp256k1-zkp) | fork `master` + `dev` + `int` |
-| `dd100e5` (lvgl) | `master` + every `release/v6`…`v9.6` (33 branches) + 56 tags (e.g. `v6.1`) |
-
-None of the pins is currently an orphaned commit reachable only by hash. The
-`lvgl` pin is contained in upstream tags, so a single branch rewrite cannot orphan
-it — only repository deletion can. Tagging the single-branch pins in their forks
-would give them the same protection.
+- **Forks:** a pin reachable from only one branch (`libs/common/embit`,
+  `usermods/secp256k1`) is orphaned if that branch is force-pushed past it.
+  Tagging those pins in their forks would protect them.
+- **`lvgl/lvgl`** (the one external remote, C source that reaches firmware): the
+  pin is contained in upstream tags, so only repository deletion (or tag
+  removal plus force-push of every containing branch) can orphan it.
