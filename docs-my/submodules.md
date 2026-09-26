@@ -16,7 +16,8 @@
 
 > Remote `secp256k1-zkp` appears twice — under `usermods/secp256k1` and under
 > `embit/secp256k1` — both from the same fork and at the same commit `d9560e0`,
-> so there is no version skew between the two checkouts.
+> so there is no version skew between the two checkouts. **Only the `usermods`
+> copy reaches firmware; keep the two in step when bumping.**
 
 ### What reaches firmware
 
