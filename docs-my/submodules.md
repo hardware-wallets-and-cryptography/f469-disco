@@ -18,10 +18,12 @@ Drift snapshot as of `2026-09-26`.
 > **5 forked**  
 > **1 external**
 
-> Remote `secp256k1-zkp` appears twice — under `usermods/secp256k1` and under
-> `libs/common/embit/secp256k1` — both from the same fork and at the same commit `d9560e0`,
-> so there is no version skew between the two checkouts. **Keep the two in step
-> when bumping.**
+> Remote `secp256k1-zkp` appears twice:
+> - under `usermods/secp256k1`  
+> - under `libs/common/embit/secp256k1`  
+> Both from the same fork and at the same commit `d9560e0`, so there is no version skew
+> between the two checkouts.  
+> **Keep the two in step when bumping.**
 
 ### What reaches the device
 
