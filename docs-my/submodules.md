@@ -6,8 +6,8 @@
 |-----------|--------|:-----:|---------------|----------|---------------------|
 | `usermods/udisplay_f469/lvgl` | `lvgl/lvgl` | ❌ | `dd100e5` | `v6.0.2-31-gdd100e5e0` | — |
 | `micropython` | `hardware-wallets-and-cryptography/micropython` | ✅ | `6bdf1b6` | `v1.10-1185-g6bdf1b691` | — |
-| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4435` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
-| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4435` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
+| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
+| `usermods/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-embedded` | ✅ | `0502cf4` | `remotes/origin/secp-zkp--int` | `secp-zkp--int` |
 | `usermods/secp256k1/secp256k1` | `hardware-wallets-and-cryptography/secp256k1-zkp` | ✅ | `d9560e0` | `d9560e0a` | — |
 | `libs/common/embit/secp256k1/secp256k1-zkp` | `hardware-wallets-and-cryptography/secp256k1-zkp` | ✅ | `d9560e0` | `d9560e0a` | — |
 | `libs/common/embit` | `hardware-wallets-and-cryptography/embit` | ✅ | `d418ef3` | `v0.8.2-4-gd418ef3` | `int` |
@@ -47,7 +47,7 @@ commits of drift:
 |-----------|--------|-----|---------|
 | `usermods/udisplay_f469/lvgl` | `master` (default) | `dd100e5` | `git -C usermods/udisplay_f469/lvgl fetch origin master -q; git -C usermods/udisplay_f469/lvgl rev-parse --short HEAD; git -C usermods/udisplay_f469/lvgl rev-list --count dd100e5..origin/master` |
 | `micropython` | `master` (default) | `6bdf1b6` | `git -C micropython fetch origin master -q; git -C micropython rev-parse --short HEAD; git -C micropython rev-list --count 6bdf1b6..origin/master` |
-| `usermods/secp256k1` | `secp-zkp--int` | `0502cf4435` | `git -C usermods/secp256k1 fetch origin secp-zkp--int -q; git -C usermods/secp256k1 rev-parse --short HEAD; git -C usermods/secp256k1 rev-list --count 0502cf4435..origin/secp-zkp--int` |
+| `usermods/secp256k1` | `secp-zkp--int` | `0502cf4` | `git -C usermods/secp256k1 fetch origin secp-zkp--int -q; git -C usermods/secp256k1 rev-parse --short HEAD; git -C usermods/secp256k1 rev-list --count 0502cf4..origin/secp-zkp--int` |
 | `usermods/secp256k1/secp256k1` | `master` (default) | `d9560e0` | `git -C usermods/secp256k1/secp256k1 fetch origin master -q; git -C usermods/secp256k1/secp256k1 rev-parse --short HEAD; git -C usermods/secp256k1/secp256k1 rev-list --count d9560e0..origin/master` |
 | `libs/common/embit/secp256k1/secp256k1-zkp` | `master` (default) | `d9560e0` | `git -C libs/common/embit/secp256k1/secp256k1-zkp fetch origin master -q; git -C libs/common/embit/secp256k1/secp256k1-zkp rev-parse --short HEAD; git -C libs/common/embit/secp256k1/secp256k1-zkp rev-list --count d9560e0..origin/master` |
 | `libs/common/embit` | `int` | `d418ef3` | `git -C libs/common/embit fetch origin int -q; git -C libs/common/embit rev-parse --short HEAD; git -C libs/common/embit rev-list --count d418ef3..origin/int` |
@@ -99,7 +99,7 @@ silently replaces a verified tree with an untested one. As of 2026-09-25:
 |---|---|---|---|
 | `micropython` | `master` (default) | `6bdf1b6` | 0 |
 | `embit` | `int` | `d418ef3` | 0 |
-| `secp256k1-embedded` | `secp-zkp--int` | `0502cf4435` | 0 |
+| `secp256k1-embedded` | `secp-zkp--int` | `0502cf4` | 0 |
 | `lvgl` | `master` (default) | `d3c5b41` | **10203** |
 | `embit/secp256k1/secp256k1-zkp` | `master` (default, fork) | `037cc6d` | **1949** |
 | `usermods/secp256k1/secp256k1` | `master` (default, fork) | `037cc6d` | **1949** |
@@ -172,7 +172,7 @@ branch is force-pushed past it.
 | Pin | Reachable from |
 |---|---|
 | `d418ef3` (embit) | `int` only |
-| `0502cf4435` (secp256k1-embedded) | `secp-zkp--int` only |
+| `0502cf4` (secp256k1-embedded) | `secp-zkp--int` only |
 | `6bdf1b6` (micropython) | fork `master` |
 | `d9560e0` (secp256k1-zkp) | fork `master` + `dev` + `int` |
 | `dd100e5` (lvgl) | `master` + every `release/v6`…`v9.6` (33 branches) + 56 tags (e.g. `v6.1`) |
