@@ -10,4 +10,5 @@
 	url = ../../diybitcoinhardware/secp256k1-embedded
 [submodule "libs/common/embit"]
 	path = libs/common/embit
-	url = https://github.com/diybitcoinhardware/embit.git
+	url = https://github.com/hardware-wallets-and-cryptography/embit.git
+	branch = int
