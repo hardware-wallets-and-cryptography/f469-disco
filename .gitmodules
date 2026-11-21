@@ -1,6 +1,7 @@
 [submodule "micropython"]
 	path = micropython
-	url = ../../diybitcoinhardware/micropython
+	url = https://github.com/hardware-wallets-and-cryptography/micropython.git
+	branch = f469-disco--pin
 [submodule "usermods/udisplay_f469/lvgl"]
 	path = usermods/udisplay_f469/lvgl
 	url = https://github.com/hardware-wallets-and-cryptography/lvgl.git
