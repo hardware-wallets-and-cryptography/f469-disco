@@ -8,7 +8,8 @@
 	branch = f469-disco--pin
 [submodule "usermods/secp256k1"]
 	path = usermods/secp256k1
-	url = ../../diybitcoinhardware/secp256k1-embedded
+	url = https://github.com/hardware-wallets-and-cryptography/diybitcoinhardware--secp256k1-embedded.git
+	branch = f469-disco--pin
 [submodule "libs/common/embit"]
 	path = libs/common/embit
 	url = https://github.com/diybitcoinhardware/embit.git
