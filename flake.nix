@@ -19,7 +19,8 @@
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = [ 
             pkgs.buildPackages.gcc-arm-embedded-9
-            pkgs.buildPackages.python39
+            # embit needs >=3.10; micropython/tools/pydfu.py:71 uses inspect.getargspec, removed in 3.11.
+            pkgs.buildPackages.python310
             pkgs.openocd
             pkgs.stlink
             pkgs.SDL2
